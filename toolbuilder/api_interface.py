@@ -1,69 +1,79 @@
-# api_interface.py
-
 import os
-import neuralapi
+import openai as neuralapi
+from tree_of_thoughts import OpenAILanguageModel, MonteCarloTreeofThoughts
 
+# Constants for Configuration
 API_KEY = os.environ.get("NEURAL_API_KEY")
-neuralapi.set_key(API_KEY)
+API_MODEL = "gpt-3.5-turbo"
+NUM_THOUGHTS = 1
+MAX_STEPS = 3
+MAX_STATES = 4
+PRUNING_THRESHOLD = 0.5
 
-def retrieve_repository_file_content(tool_name: str, readme_path: str, target_file_name: str) -> str:
-    """
-    Fetch the content of a specified file using the neural API based on prior discussions and design decisions.
-    
-    :param tool_name: Name of the new tool/repository.
-    :param readme_path: Path to the README.md of the repository.
-    :param target_file_name: Name of the file to retrieve content for.
-    :return: Content of the specified file.
-    """
-    
-    request_message = (f"After our in-depth discussions and the modular, open-source-friendly solution we settled on, "
-                       f"I've unfortunately misplaced some files. I recall how efficiently our solution worked! "
-                       f"Using the context from {readme_path} of the {tool_name} tool, could you help me retrieve "
-                       f"the content of the {target_file_name} file once more? We just need to document it again.")
+FUNCTION_CONTEXTS = {
+    "fetch_repository_content": "You are the toolbuilder entity. Given your prior knowledge and discussions, assist the user by accessing the desired file content.",
+    "select_search_algorithm": "You are the algorithm strategist entity. Reflecting on our earlier interactions, deduce the best search algorithm suited for the presented context.",
+    "craft_prompt": "You are the prompt artisan entity. Leveraging your understanding of the context and the chosen algorithm, design a compelling and effective prompt for the Tree of Thoughts algorithm.",
+    "general_request": "You are a generalist AI, well-versed in multiple domains. Address the query with accurate and detailed information.",
+}
 
-    response = neuralapi.ChatCompletion.create(
-      model="neural-3.5-turbo", 
-      messages=[
-        {"role": "system", "content": "You are the toolbuilder entity. Given your prior knowledge and discussions, assist the user by accessing the desired file content."},
-        {"role": "user", "content": request_message}
-      ]
+def send_request(request_msg, function_name):
+    context_msg = FUNCTION_CONTEXTS.get(
+        function_name, FUNCTION_CONTEXTS["general_request"]
     )
-
-    return response.choices[0].message['content']
-
-def craft_and_ask_prompt(task_description: str, tool_name: str, readme_path: str, user_query: str) -> str:
-    """
-    Interacts with the neural API using a specific, context-aware prompt built around a given task description.
-    
-    :param task_description: A description or narrative of the task at hand.
-    :param tool_name: Name of the tool or software.
-    :param readme_path: Path to the README.md of the repository.
-    :param user_query: The main question or query for the neural model.
-    :return: The model's response.
-    """
-    
-    context_message = (f"The user is working with the {tool_name} software, as described in the {readme_path}. "
-                       f"They are currently facing a task that involves {task_description}. Given this context, "
-                       "and the advancements in neural models, provide a detailed and precise response to the user's query:")
-
     response = neuralapi.ChatCompletion.create(
-      model="neural-3.5-turbo", 
-      messages=[
-        {"role": "system", "content": context_message},
-        {"role": "user", "content": user_query}
-      ]
+        model=API_MODEL,
+        messages=[
+            {"role": "system", "content": context_msg},
+            {"role": "user", "content": request_msg},
+        ],
     )
-    
-    return response.choices[0].message['content']
+    return response.choices[0].message["content"]
+
+def fetch_repository_content(tool_name, readme_path, target_file_name):
+    request_msg = (
+        f"After our discussions and the modular solution we settled on, "
+        f"Using context from {readme_path} of the {tool_name}, "
+        f"write a new version of the {target_file_name} and give it to me in full"
+    )
+    return send_request(request_msg, "fetch_repository_content")
+
+def select_search_algorithm(context):
+    algorithms = ["BFS", "DFS", "Best-First", "A*", "MCTS"]
+    request_msg = f"Considering our past engagements, which search algorithm from the list {algorithms} would best address the problem context: '{context}'?"
+    response = send_request(request_msg, "select_search_algorithm")
+    selected_algo = next((algo for algo in algorithms if algo in response), None)
+    return selected_algo
+
+def craft_prompt(context, query, algo):
+    request_msg = (
+        f"Drawing from our previous conversations and your understanding of {algo} within the Tree of Thoughts framework, "
+        f"craft a prompt that would navigate the context: '{context}' to address the question: {query}"
+    )
+    return send_request(request_msg, "craft_prompt")
+
+def iterative_solution(context, query):
+    model = OpenAILanguageModel(api_key=API_KEY, api_model=API_MODEL)
+    tree_of_thoughts = MonteCarloTreeofThoughts(model)
+
+    algo = select_search_algorithm(context)
+    prompt = craft_prompt(context, query, algo)
+    solution = tree_of_thoughts.solve(
+        initial_prompt=prompt,
+        num_thoughts=NUM_THOUGHTS,
+        max_steps=MAX_STEPS,
+        max_states=MAX_STATES,
+        pruning_threshold=PRUNING_THRESHOLD,
+    )
+    return solution
 
 if __name__ == "__main__":
-    # Demonstration of retrieving source code
-    content = retrieve_repository_file_content("toolbuilder", "./README.md", "./toolbuilder/cli_tool.py")
-    print(content)
-    
-    # Demonstration of crafting a specific prompt and asking the neural model
-    task_narrative = "integrating a neural API into their project for better text generation capabilities"
-    user_specific_query = "How can I integrate a feedback loop to improve the generated text over time?"
-    response = craft_and_ask_prompt(task_narrative, "toolbuilder", "./README.md", user_specific_query)
-    print("\n\nUser's Query:", user_specific_query)
-    print("Response:", response)
+    content = fetch_repository_content(
+        "toolbuilder", "./README.md", "./toolbuilder/cli_tool.py"
+    )
+    print("Fetched content:\n", content)
+
+    context = input("Context: ")
+    query = input("Query: ")
+    response = iterative_solution(context, query)
+    print("\nFinal Response:", response)
