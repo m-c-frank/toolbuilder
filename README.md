@@ -192,6 +192,10 @@ Interact via an intuitive command-line interface, perfect for tool creation, twe
 
 Experience the Docker-in-Docker setup, ensuring both consistency in tool behavior and robust security.
 
+### 5. Iterative Response Refinement 📝
+
+Work hand-in-hand with the AI. Every response from the neural API can be opened in an editor, like `vim`, for on-the-spot modifications. Once you're satisfied with the edits, simply exit the editor to let the program seamlessly continue its operations. Experience the luxury of real-time adjustments and tailor the AI outputs precisely to your needs.
+
 ---
 
 ## Getting Started
