@@ -2,11 +2,9 @@
 
 Empower your development process with `toolbuilder`, the avant-garde solution for tool creation and enhancement. Whether you're a developer seeking to design intricate software tools or a creative enthusiast with a penchant for innovation, `toolbuilder` is here to redefine your crafting journey.
 
----
-
 ## Dive into the world of toolbuilder
 
-`toolbuilder` isn't just another Dockerized solution; it's a vision crafted for developers and creative minds. By harnessing the power of neural API and deploying a Docker-in-Docker approach, we've ensured a platform that supports iterative tool development and optimization. What does this mean for you? A seamless, efficient, and enriched user experience throughout your tool's lifecycle.
+`toolbuilder` isn't just another development solution; it's a vision crafted for developers and creative minds. By harnessing the power of the neural API, we've ensured a platform that supports iterative tool development and optimization. What does this mean for you? A seamless, efficient, and enriched user experience throughout your tool's lifecycle.
 
 ## Features 🌟
 
@@ -16,7 +14,8 @@ Benefit from a feedback-driven development process to continuously refine and up
 
 ### 2. Neural API Integration 🧠
 
-Tap into the advanced neural models for genuine, human-like interactions and guidance. Fetch content, understand contexts, and engage in organic conversations.
+Tap into advanced neural models for genuine, human-like interactions and guidance. Fetch content, understand contexts, and engage in organic conversations.
+
 
 ```python
 # toolbuilder/api_interface.py
@@ -249,15 +248,9 @@ if __name__ == "__main__":
 
 Interact via an intuitive command-line interface, perfect for tool creation, tweaks, and user queries.
 
-### 4. Safety Through Containers 🛡️
-
-Experience the Docker-in-Docker setup, ensuring both consistency in tool behavior and robust security.
-
-### 5. Iterative Response Refinement 📝
+### 4. Iterative Response Refinement 📝
 
 Work hand-in-hand with the AI. Every response from the neural API can be opened in an editor, like `vim`, for on-the-spot modifications. Once you're satisfied with the edits, simply exit the editor to let the program seamlessly continue its operations. Experience the luxury of real-time adjustments and tailor the AI outputs precisely to your needs.
-
----
 
 ## Getting Started
 
@@ -273,11 +266,8 @@ Work hand-in-hand with the AI. Every response from the neural API can be opened 
 │   ├── __main__.py
 │   ├── api_interface.py
 │   ├── cli_tool.py
-│   ├── docker_config.py
 ├── requirements.txt
 ├── setup.py
-├── Dockerfile
-├── DinD.Dockerfile
 └── tests
     ├── __init__.py
     ├── test_api_interface.py
@@ -286,36 +276,60 @@ Work hand-in-hand with the AI. Every response from the neural API can be opened 
 
 ## Installation & Usage 🛠️
 
-1. **Clone** and access:
+Install the `toolbuilder` CLI using:
 
-   ```bash
-   git clone https://github.com/m-c-frank/toolbuilder.git
-   cd toolbuilder
-   ```
+```bash
+pip install git+https://github.com/m-c-frank/toolbuilder-cli.git
+```
 
-2. **Docker Build**:
+## Usage
 
-   ```bash
-   docker build -t toolbuilder -f Dockerfile .
-   ```
+You can use the Toolbuilder CLI tool with the following commands and options:
 
-   For Docker-in-Docker:
+### Fetch
 
-   ```bash
-   docker build -t toolbuilder-dind -f DinD.Dockerfile .
-   ```
+To fetch the content of a specific file from the repository:
 
-3. **Kickstart** the Docker container:
+```bash
+toolbuilder_cli fetch <tool_name> <file_path>
+```
 
-   ```bash
-   docker run -it --privileged --env NEURAL_API_KEY=your_api_key toolbuilder-dind
-   ```
+### Select Algorithm
 
-4. **Engage** with `toolbuilder`:
+To select the most appropriate algorithm based on a given context:
 
-   ```bash
-   toolbuilder-cli "Enter your command or inquiry"
-   ```
+```bash
+toolbuilder_cli select_algo <context>
+```
+
+### Craft
+
+To craft a prompt based on context, query, and algorithm:
+
+```bash
+toolbuilder_cli craft <context> <query> <algorithm>
+```
+
+### Iterate
+
+To run the iterative solution for a given context and query:
+
+```bash
+toolbuilder_cli iterate <context> <query>
+```
+
+## Options
+
+The following options are also available:
+
+```bash
+-q, --query      Query for the neural model.
+-c, --context    Context for the neural model.
+-f, --file       Path of the file to retrieve content from.
+--analyze        Analyze the provided file's content.
+--debug          Get debugging information for the provided file's content.
+--recommend      Get recommendations for the provided file's content.
+```
 
 ## Companion Tools 🚀
 
