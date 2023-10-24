@@ -279,19 +279,19 @@ Work hand-in-hand with the AI. Every response from the neural API can be opened 
 Install the `toolbuilder` CLI using:
 
 ```bash
-pip install git+https://github.com/m-c-frank/toolbuilder-cli.git
+pip install git+https://github.com/m-c-frank/toolbuilder.git
 ```
 
 ## Usage
 
-You can use the Toolbuilder CLI tool with the following commands and options:
+You can use the toolbuilder CLI tool with the following commands and options:
 
 ### Fetch
 
 To fetch the content of a specific file from the repository:
 
 ```bash
-toolbuilder_cli fetch <tool_name> <file_path>
+toolbuilder fetch <tool_name> <file_path>
 ```
 
 ### Select Algorithm
@@ -299,7 +299,7 @@ toolbuilder_cli fetch <tool_name> <file_path>
 To select the most appropriate algorithm based on a given context:
 
 ```bash
-toolbuilder_cli select_algo <context>
+toolbuilder select_algo <context>
 ```
 
 ### Craft
@@ -307,7 +307,7 @@ toolbuilder_cli select_algo <context>
 To craft a prompt based on context, query, and algorithm:
 
 ```bash
-toolbuilder_cli craft <context> <query> <algorithm>
+toolbuilder craft <context> <query> <algorithm>
 ```
 
 ### Iterate
@@ -315,7 +315,7 @@ toolbuilder_cli craft <context> <query> <algorithm>
 To run the iterative solution for a given context and query:
 
 ```bash
-toolbuilder_cli iterate <context> <query>
+toolbuilder iterate <context> <query>
 ```
 
 ## Options
