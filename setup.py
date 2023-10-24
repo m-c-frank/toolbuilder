@@ -5,11 +5,11 @@ setup(
     version="0.1",
     packages=find_packages(),
     install_requires=[
-        "openai",
     ],
     extras_require={
         "git": [
             "treeofthoughts @ git+https://github.com/m-c-frank/tree-of-thoughts",
+            "neuralapi @ git+https://github.com/m-c-frank/neuralapi",
         ],
     },
     author="Martin Christoph Frank",

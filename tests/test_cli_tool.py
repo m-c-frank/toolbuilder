@@ -1,6 +1,6 @@
 import sys
 import pytest
-from toolbuilder.cli_tool import main
+from toolbuilder_cli import cli_tool
 
 # Centralized function to set mock return values
 def set_mocks(mocker, **kwargs):
@@ -15,7 +15,7 @@ def set_mocks(mocker, **kwargs):
     }
     
     for mock_name, default_value in default_values.items():
-        mocker.patch(f"toolbuilder.cli_tool.{mock_name}", return_value=kwargs.get(mock_name, default_value))
+        mocker.patch(f"toolbuilder_cli.cli_tool.{mock_name}", return_value=kwargs.get(mock_name, default_value))
 
 @pytest.mark.parametrize("args, expected_output", [
     (["fetch", "tool1", "path/to/file"], "Content of path/to/file:\n mock_content"),
@@ -31,12 +31,12 @@ def set_mocks(mocker, **kwargs):
 def test_main_commands(mocker, capsys, args, expected_output):
     set_mocks(mocker)
     sys.argv = ["test_name"] + args
-    main()
+    cli_tool.main()
     captured = capsys.readouterr()
     assert expected_output in captured.out
 
 def test_invalid_command(capsys):
     sys.argv = ["test_name"]
-    main()
+    cli_tool.main()
     captured = capsys.readouterr()
     assert "Please provide valid command or options!" in captured.out

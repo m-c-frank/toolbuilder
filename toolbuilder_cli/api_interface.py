@@ -1,7 +1,7 @@
 # toolbuilder/api_interface.py
 
 import os
-import openai as neuralapi
+import neuralapi
 from tree_of_thoughts import OpenAILanguageModel, MonteCarloTreeofThoughts
 
 API_KEY = os.environ.get("NEURAL_API_KEY")
