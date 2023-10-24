@@ -4,8 +4,7 @@ setup(
     name="toolbuilder_cli",
     version="0.1",
     packages=find_packages(),
-    install_requires=[
-    ],
+    install_requires=[],
     extras_require={
         "git": [
             "treeofthoughts @ git+https://github.com/m-c-frank/tree-of-thoughts",
