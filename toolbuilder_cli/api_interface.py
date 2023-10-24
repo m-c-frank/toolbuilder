@@ -17,20 +17,20 @@ FUNCTION_CONTEXTS = {
     "select_search_algorithm": "You are the algorithm strategist entity. Reflecting on our earlier interactions, deduce the best search algorithm suited for the presented context.",
     "craft_prompt": "You are the prompt artisan entity. Leveraging your understanding of the context and the chosen algorithm, design a compelling and effective prompt for the Tree of Thoughts algorithm.",
     "general_request": "You are a generalist AI, well-versed in multiple domains. Address the query with accurate and detailed information.",
-    "analyze_content": "You are an expert in analyzing Python code. Examine the following content and provide insights.",
-    "debug_content": "You are a debugging expert. Analyze the following Python code and provide debugging information.",
-    "recommend_optimizations": "You are an optimization specialist. Review the following Python code and provide recommendations for optimization."
+    "get_analysis": "You are an expert in analyzing Python code. Examine the following content and provide insights.",
+    "get_debugging_info": "You are a debugging expert. Analyze the following Python code and provide debugging information.",
+    "get_recommendations": "You are an optimization specialist. Review the following Python code and provide recommendations for optimization."
 }
 
 
 def get_analysis(content):
-    return send_request(content, "analyze_content")
+    return send_request(content, "get_analysis")
 
 def get_debugging_info(content):
-    return send_request(content, "debug_content")
+    return send_request(content, "get_debugging_info")
 
 def get_recommendations(content):
-    return send_request(content, "recommend_optimizations")
+    return send_request(content, "get_recommendations")
 
 def load_prompt_template(prompt_path):
     with open(prompt_path, 'r') as file:
@@ -56,7 +56,15 @@ def send_request(request_msg, function_name, processed_template=None):
             {"role": "user", "content": request_msg},
         ],
     )
-    return response.choices[0].message["content"]
+    
+    # Check if the response is structured correctly
+    if "choices" in response and isinstance(response["choices"], list) and response["choices"]:
+        return response["choices"][0]["message"]["content"]
+    else:
+        # Handle the case where the response is not as expected
+        raise Exception("Unexpected response format:", response)
+        
+
 
 def fetch_repository_content(tool_name, dir_tree, target_file_name):
     template_content = load_prompt_template(PROMPT_TEMPLATE_FILEPATH)
