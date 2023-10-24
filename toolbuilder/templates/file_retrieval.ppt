@@ -22,9 +22,7 @@ Tap into the advanced neural models for genuine, human-like interactions and gui
 import os
 import openai as neuralapi
 from tree_of_thoughts import OpenAILanguageModel, MonteCarloTreeofThoughts
-from toolbuilder.prompt_template_utils import insert_api_content_into_template, load_file_content
 
-# Constants for Configuration
 API_KEY = os.environ.get("NEURAL_API_KEY")
 API_MODEL = "gpt-3.5-turbo"
 NUM_THOUGHTS = 1
@@ -38,14 +36,35 @@ FUNCTION_CONTEXTS = {
     "select_search_algorithm": "You are the algorithm strategist entity. Reflecting on our earlier interactions, deduce the best search algorithm suited for the presented context.",
     "craft_prompt": "You are the prompt artisan entity. Leveraging your understanding of the context and the chosen algorithm, design a compelling and effective prompt for the Tree of Thoughts algorithm.",
     "general_request": "You are a generalist AI, well-versed in multiple domains. Address the query with accurate and detailed information.",
+    "analyze_content": "You are an expert in analyzing Python code. Examine the following content and provide insights.",
+    "debug_content": "You are a debugging expert. Analyze the following Python code and provide debugging information.",
+    "recommend_optimizations": "You are an optimization specialist. Review the following Python code and provide recommendations for optimization."
 }
 
-def send_request(request_msg, function_name):
+
+def get_analysis(content):
+    return send_request(content, "analyze_content")
+
+def get_debugging_info(content):
+    return send_request(content, "debug_content")
+
+def get_recommendations(content):
+    return send_request(content, "recommend_optimizations")
+
+def load_prompt_template(prompt_path):
+    with open(prompt_path, 'r') as file:
+        return file.read()
+
+def process_template(template_content, dir_tree, requested_file_path):
+    return template_content.replace('<REPO_DIR_TREE>', dir_tree).replace('<REQUESTED_FILENAME>', requested_file_path)
+
+def send_request(request_msg, function_name, processed_template=None):
     context_source = FUNCTION_CONTEXTS.get(function_name, FUNCTION_CONTEXTS["general_request"])
 
-    # Determine if the context source is a file path or a hardcoded string
-    if context_source.endswith('.ppt'):
-        context_msg = load_file_content(context_source)
+    if function_name == "fetch_repository_content":
+        context_msg = processed_template
+    elif context_source.endswith('.ppt'):
+        context_msg = load_prompt_template(context_source)
     else:
         context_msg = context_source
 
@@ -58,9 +77,11 @@ def send_request(request_msg, function_name):
     )
     return response.choices[0].message["content"]
 
-def fetch_repository_content(tool_name, readme_path, target_file_name):
-    request_msg = f"{tool_name} | {readme_path} | {target_file_name}"
-    return send_request(request_msg, "fetch_repository_content")
+def fetch_repository_content(tool_name, dir_tree, target_file_name):
+    template_content = load_prompt_template(PROMPT_TEMPLATE_FILEPATH)
+    processed_template = process_template(template_content, dir_tree, target_file_name)
+    request_msg = f"{tool_name} | {target_file_name}"
+    return send_request(request_msg, "fetch_repository_content", processed_template)
 
 def select_search_algorithm(context):
     algorithms = ["BFS", "DFS", "Best-First", "A*", "MCTS"]
@@ -92,11 +113,13 @@ def iterative_solution(context, query):
     return solution
 
 if __name__ == "__main__":
+    dir_tree = "<REPO_DIR_TREE>"
+    requested_file_path = "<REQUESTED_FILENAME>"
+
     content = fetch_repository_content(
-        "toolbuilder", "./README.md", "./toolbuilder/cli_tool.py"
+        "toolbuilder", dir_tree, requested_file_path
     )
-    formatted_content = insert_api_content_into_template(content, PROMPT_TEMPLATE_FILEPATH)
-    print("Fetched and formatted content:\n", formatted_content)
+    print("Fetched file content:\n", content)
 
     context = input("Context: ")
     query = input("Query: ")
