@@ -106,6 +106,7 @@ if __name__ == "__main__":
 import os
 import openai as neuralapi
 from tree_of_thoughts import OpenAILanguageModel, MonteCarloTreeofThoughts
+from toolbuilder.prompt_template_utils import insert_api_content_into_template, load_file_content
 
 # Constants for Configuration
 API_KEY = os.environ.get("NEURAL_API_KEY")
@@ -114,18 +115,24 @@ NUM_THOUGHTS = 1
 MAX_STEPS = 3
 MAX_STATES = 4
 PRUNING_THRESHOLD = 0.5
+PROMPT_TEMPLATE_FILEPATH = "toolbuilder/templates/file_retrieval.ppt"
 
 FUNCTION_CONTEXTS = {
-    "fetch_repository_content": "You are the toolbuilder entity. Given your prior knowledge and discussions, assist the user by accessing the desired file content.",
+    "fetch_repository_content": PROMPT_TEMPLATE_FILEPATH,
     "select_search_algorithm": "You are the algorithm strategist entity. Reflecting on our earlier interactions, deduce the best search algorithm suited for the presented context.",
     "craft_prompt": "You are the prompt artisan entity. Leveraging your understanding of the context and the chosen algorithm, design a compelling and effective prompt for the Tree of Thoughts algorithm.",
     "general_request": "You are a generalist AI, well-versed in multiple domains. Address the query with accurate and detailed information.",
 }
 
 def send_request(request_msg, function_name):
-    context_msg = FUNCTION_CONTEXTS.get(
-        function_name, FUNCTION_CONTEXTS["general_request"]
-    )
+    context_source = FUNCTION_CONTEXTS.get(function_name, FUNCTION_CONTEXTS["general_request"])
+
+    # Determine if the context source is a file path or a hardcoded string
+    if context_source.endswith('.ppt'):
+        context_msg = load_file_content(context_source)
+    else:
+        context_msg = context_source
+
     response = neuralapi.ChatCompletion.create(
         model=API_MODEL,
         messages=[
@@ -136,11 +143,7 @@ def send_request(request_msg, function_name):
     return response.choices[0].message["content"]
 
 def fetch_repository_content(tool_name, readme_path, target_file_name):
-    request_msg = (
-        f"After our discussions and the modular solution we settled on, "
-        f"Using context from {readme_path} of the {tool_name}, "
-        f"write a new version of the {target_file_name} and give it to me in full"
-    )
+    request_msg = f"{tool_name} | {readme_path} | {target_file_name}"
     return send_request(request_msg, "fetch_repository_content")
 
 def select_search_algorithm(context):
@@ -176,7 +179,8 @@ if __name__ == "__main__":
     content = fetch_repository_content(
         "toolbuilder", "./README.md", "./toolbuilder/cli_tool.py"
     )
-    print("Fetched content:\n", content)
+    formatted_content = insert_api_content_into_template(content, PROMPT_TEMPLATE_FILEPATH)
+    print("Fetched and formatted content:\n", formatted_content)
 
     context = input("Context: ")
     query = input("Query: ")
@@ -206,14 +210,16 @@ Work hand-in-hand with the AI. Every response from the neural API can be opened 
 .
 ├── LICENSE.md
 ├── README.md
-└── toolbuilder
-    ├── __init__.py
-    ├── __main__.py
-    ├── api_interface.py
-    ├── cli_tool.py
-    ├── command_parser.py
-    ├── docker_config.py
-    └── feedback_optimizer.py
+├── toolbuilder
+│   ├── templates
+│   │   ├── file_retrieval.ppt
+│   ├── __main__.py
+│   ├── api_interface.py
+│   ├── cli_tool.py
+│   ├── command_parser.py
+│   ├── docker_config.py
+│   ├── feedback_optimizer.py
+│   └── prompt_template_utils.py
 ├── requirements.txt
 ├── Dockerfile
 ├── DinD.Dockerfile
