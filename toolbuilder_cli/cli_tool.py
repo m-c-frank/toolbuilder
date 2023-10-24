@@ -1,7 +1,7 @@
 # toolbuilder/cli_tool.py
 
 import argparse
-from toolbuilder.api_interface import (
+from toolbuilder_cli.api_interface import (
     iterative_solution,
     fetch_repository_content,
     select_search_algorithm,

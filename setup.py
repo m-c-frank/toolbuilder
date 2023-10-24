@@ -26,7 +26,7 @@ setup(
     python_requires=">=3.11",
     entry_points={
         "console_scripts": [
-            "toolbuilder_cli=toolbuilder.__main__:main",
+            "toolbuilder=toolbuilder.__main__:main",
         ],
     },
 )
