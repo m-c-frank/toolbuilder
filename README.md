@@ -219,7 +219,6 @@ Work hand-in-hand with the AI. Every response from the neural API can be opened 
 │   ├── command_parser.py
 │   ├── docker_config.py
 │   ├── feedback_optimizer.py
-│   └── prompt_template_utils.py
 ├── requirements.txt
 ├── Dockerfile
 ├── DinD.Dockerfile

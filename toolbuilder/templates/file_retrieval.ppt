@@ -1,3 +1,25 @@
+# toolbuilder 🛠️
+
+Empower your development process with `toolbuilder`, the avant-garde solution for tool creation and enhancement. Whether you're a developer seeking to design intricate software tools or a creative enthusiast with a penchant for innovation, `toolbuilder` is here to redefine your crafting journey.
+
+---
+
+## Dive into the world of toolbuilder
+
+`toolbuilder` isn't just another Dockerized solution; it's a vision crafted for developers and creative minds. By harnessing the power of neural API and deploying a Docker-in-Docker approach, we've ensured a platform that supports iterative tool development and optimization. What does this mean for you? A seamless, efficient, and enriched user experience throughout your tool's lifecycle.
+
+## Features 🌟
+
+### 1. Iterative Tool Development 🔄
+
+Benefit from a feedback-driven development process to continuously refine and upgrade your tool functionalities.
+
+### 2. Neural API Integration 🧠
+
+Tap into the advanced neural models for genuine, human-like interactions and guidance. Fetch content, understand contexts, and engage in organic conversations.
+
+This is the api_interface.py file:
+```python
 import os
 import openai as neuralapi
 from tree_of_thoughts import OpenAILanguageModel, MonteCarloTreeofThoughts
@@ -79,8 +101,8 @@ def iterative_solution(context, query):
     return solution
 
 if __name__ == "__main__":
-    dir_tree = input("Directory Structure: ")
-    requested_file_path = input("File Path: ")
+    dir_tree = "<REPO_DIR_TREE>"
+    requested_file_path = "<REQUESTED_FILENAME>"
 
     content = fetch_repository_content(
         "toolbuilder", dir_tree, requested_file_path
@@ -92,3 +114,32 @@ if __name__ == "__main__":
     response = iterative_solution(context, query)
     print("\nFinal Response:", response)
 
+```
+
+### Example Output
+
+```python
+<OUTPUT_FILE_FROM_NEURALAPI>
+```
+
+### 3. Enhanced CLI 🖥️
+
+Interact via an intuitive command-line interface, perfect for tool creation, tweaks, and user queries.
+
+### 4. Safety Through Containers 🛡️
+
+Experience the Docker-in-Docker setup, ensuring both consistency in tool behavior and robust security.
+
+### 5. Iterative Response Refinement 📝
+
+Work hand-in-hand with the AI. Every response from the neural API can be opened in an editor, like `vim`, for on-the-spot modifications. Once you're satisfied with the edits, simply exit the editor to let the program seamlessly continue its operations. Experience the luxury of real-time adjustments and tailor the AI outputs precisely to your needs.
+
+---
+
+## Getting Started
+
+**Peek Inside - Directory Structure**:
+
+```bash
+<REPO_DIR_TREE>
+```

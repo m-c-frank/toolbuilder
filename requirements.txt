@@ -1,1 +1,1 @@
-tree-of-thoughts
+git+https://github.com/m-c-frank/tree-of-thoughts
