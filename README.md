@@ -274,7 +274,6 @@ Work hand-in-hand with the AI. Every response from the neural API can be opened 
 │   ├── api_interface.py
 │   ├── cli_tool.py
 │   ├── docker_config.py
-│   ├── feedback_optimizer.py
 ├── requirements.txt
 ├── setup.py
 ├── Dockerfile
@@ -283,7 +282,6 @@ Work hand-in-hand with the AI. Every response from the neural API can be opened 
     ├── __init__.py
     ├── test_api_interface.py
     ├── test_cli_tool.py
-    └── test_feedback_optimizer.py
 ```
 
 ## Installation & Usage 🛠️
