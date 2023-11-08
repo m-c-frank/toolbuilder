@@ -1,38 +1,3 @@
-# ToolBuilder
-
-ToolBuilder is a CLI tool written in Go. It parses a README.md file and creates files based on the specified paths and code blocks within the README.
-
-## Installation
-
-To compile ToolBuilder, you need to have Go installed. Save the Go code below to a file named `toolbuilder.go`.
-
-## Usage
-
-After compiling ToolBuilder, you can use it with the following command:
-
-```sh
-./toolbuilder -i README.md -o output_directory
-```
-
-Replace `README.md` with the path to your README and `output_directory` with the path where you want the files to be created.
-
-## Compiling from Source
-
-Run the following command in the directory with the `toolbuilder.go` source file:
-
-```sh
-go build -o toolbuilder toolbuilder.go
-```
-
-This will create a `toolbuilder` executable that you can run.
-
-## Go Source Code for ToolBuilder
-
-Save the following code to a file named `toolbuilder.go`.
-
-## ./toolbuilder.go
-
-```go
 package main
 
 import (
@@ -104,17 +69,4 @@ func writeFile(root, path, content string) {
 		fmt.Printf("Error writing file %s: %v\n", fullPath, err)
 	}
 }
-```
 
-## License
-
-ToolBuilder is released under the MIT License.
-```
-
-To use this README with `toolbuilder`, you would:
-
-1. Compile `toolbuilder` from the provided Go source code.
-2. Run `toolbuilder` with the README.md as input.
-3. `toolbuilder` would then parse the README and create a `toolbuilder.go` file with the Go source code inside it.
-
-Remember, this README is designed to be used with the `toolbuilder` tool once it is compiled and ready to use. The Go code block is marked with `## ./toolbuilder.go`, which `toolbuilder` will recognize as a path and content to create a file from.
