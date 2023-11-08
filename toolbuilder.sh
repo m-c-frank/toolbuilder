@@ -70,6 +70,10 @@ while getopts ":hi:o:" opt; do
             echo "Invalid Option: -$OPTARG requires an argument" 1>&2
             exit 1
             ;;
+        * )
+            show_help
+            exit 1
+            ;;
     esac
 done
 shift $((OPTIND -1))
