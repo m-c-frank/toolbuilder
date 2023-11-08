@@ -7,7 +7,7 @@ toolbuilder is a simple CLI tool that parses a README.md file and creates files 
 To install toolbuilder, run the following command in your terminal:
 
 ```bash
-bash <(curl -s https://github.com/m-c-frank/toolbuilder/raw/main/install.sh)
+curl -s https://raw.githubusercontent.com/m-c-frank/toolbuilder/main/install.sh | bash
 ```
 
 This command will download and execute the `toolbuilder.sh` script from the repository, which sets up the tool on your system.
