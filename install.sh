@@ -4,7 +4,7 @@
 
 TOOL_NAME="toolbuilder"
 INSTALL_DIR="$HOME/.local/bin"
-REPO_URL="https://raw.githubusercontent.com/m-c-frank/toolbuilder/main/toolbuilder.sh"
+REPO_URL="https://raw.githubusercontent.com/m-c-frank/toolbuilder/main/toolbuilder.fish"
 
 # Create install directory if it doesn't exist
 mkdir -p "$INSTALL_DIR"
